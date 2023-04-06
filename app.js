@@ -43,13 +43,13 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
   var item = req.body.item;
-  // console.log(req.body.submit)
+  console.log(req.body.item)
   if (req.body.submit === today) {
     var newitem = new Item({
       Name: item,
     });
     newitem.save();
-    items.push(newitem.Name);
+    // items.push(newitem.Name);
     res.redirect("/");
     // mongoose.connection.close();
   } else {
@@ -70,4 +70,3 @@ app.get("/about", (req, res) => {
 app.listen(3000, () => {
   console.log("lisniting on http://localhost:3000");
 });
-var aa=323
