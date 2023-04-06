@@ -7,13 +7,13 @@
         
     </div>
     <div class="box">
-        <p><%= addeditem[0] %></p>
-        <%for(var i =1;i < addeditem.length;i++){%>
+       
+        <%addeditem.forEach((item)=>{%>
             <div class="item">
             <input type="checkbox">
-                <p><%= addeditem[i] %></p>
+                <p><%= item.Name %></p>
             </div>
-            <%}%>
+            <%})%>
 
         <form action="/" method="post">
             <input type="text" name="item" id="item" placeholder="add item" autocomplete="off">
