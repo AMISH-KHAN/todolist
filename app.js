@@ -6,17 +6,29 @@ const app = express();
 const { daydis, dayname } = require(__dirname + "/day.js");
 // making database
 mongoose.connect("mongodb://127.0.0.1/items");
+
+//making db schema
 const itemSchema = mongoose.Schema({
   Name: String,
 });
 
+const listSchema = mongoose.Schema({
+  Name: String,
+  listItem:[itemSchema]
+})
+//definig new models
 const Item = mongoose.model("item", itemSchema);
+const List = mongoose.model("list", listSchema);
+//defining constant documents
+
+
 const newitem1 = new Item({
   Name: "this is a to do list",
 });
 const newitem2 = new Item({
   Name: "press + to add items",
 });
+const defaulItems=[newitem1,newitem2]
 // if()
 
 // var items = [];
@@ -31,7 +43,7 @@ console.log();
 app.get("/", (req, res) => {
   Item.find().then((result) => {
     if (result.length ===0 ) {
-        Item.insertMany([newitem1, newitem2]);
+        Item.insertMany(defaulItems);
         res.redirect("/")
     }
     else {
@@ -40,6 +52,30 @@ app.get("/", (req, res) => {
     }
   });
 });
+
+app.get("/:topic", (req, res) => {
+  const requestedTitle = req.params.topic;
+  List.findOne({ Name: requestedTitle }).then((result) => {
+    console.log(result)
+    if (!result) {
+      
+      const listitems = new List({
+        Name: requestedTitle,
+        listItem: defaulItems
+      })
+      listitems.save();
+      res.redirect("/"+requestedTitle)
+    }
+    else {
+     res.render("temp",{ listtitle: requestedTitle, addeditem:result.listItem })
+      
+    }
+    })
+    
+    
+   
+})
+
 //post request
 app.post("/delete", (req, res) => {
     var idvalue = req.body.checker;
