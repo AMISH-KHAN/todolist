@@ -39,7 +39,7 @@ app.use(express.static("public"));
 
 var days = daydis();
 var today = "today";
-console.log();
+
 app.get("/", (req, res) => {
   Item.find().then((result) => {
     if (result.length ===0 ) {
@@ -56,7 +56,7 @@ app.get("/", (req, res) => {
 app.get("/:topic", (req, res) => {
   const requestedTitle = req.params.topic;
   List.findOne({ Name: requestedTitle }).then((result) => {
-    console.log(result)
+    
     if (!result) {
       
       const listitems = new List({
@@ -67,7 +67,7 @@ app.get("/:topic", (req, res) => {
       res.redirect("/"+requestedTitle)
     }
     else {
-     res.render("temp",{ listtitle: requestedTitle, addeditem:result.listItem })
+     res.render("temp",{ listtitle: result.Name, addeditem:result.listItem })
       
     }
     })
@@ -78,44 +78,56 @@ app.get("/:topic", (req, res) => {
 
 //post request
 app.post("/delete", (req, res) => {
-    var idvalue = req.body.checker;
-    if (idvalue) {
+  var idvalue = req.body.checker;
+  const itemname = req.body.itemname;
+  // console.log(itemname)
+  if (itemname === "today") {
+    
+    
         
         Item.findByIdAndDelete(idvalue).then((result) => {
-            console.log(result)
+            // console.log(result)
         })
-    }
+      
+      res.redirect("/")
+  }
+  else {
+    List.findOneAndUpdate({ Name: itemname }, { $pull: { listItem: { _id: idvalue } } }).then((result) => {
+      console.log(result);
+      res.redirect("/"+itemname)
+    })
+  }
     
-    res.redirect("/")
 })
+
 app.post("/", (req, res) => {
   var item = req.body.item;
-  console.log(req.body.item)
-  if (req.body.submit === today) {
-    var newitem = new Item({
-      Name: item,
-    });
+  const submit = req.body.submit;
+  var newitem = new Item({
+    Name: item,
+  });
+  if (submit === "today") {
+    
     newitem.save();
-    // items.push(newitem.Name);
+   
     res.redirect("/");
-    // mongoose.connection.close();
-  } else {
-    workitems.push(item);
-    res.redirect("/work");
   }
+  else {
+    List.findOne({ Name: submit }).then((result) => {
+      // console.log(result)
+      result.listItem.push(newitem)
+      result.save();
+      res.redirect("/"+submit)
+    })
+  }
+  
 });
 
 
-app.get("/work", (req, res) => {
-  res.render("temp", { listtitle: "work list", addeditem: workitems });
-});
-app.post("/work", (req, res) => {
-//   console.log(req.body);
-  res.redirect("/work");
-});
+
 app.get("/about", (req, res) => {
   res.render("about");
 });
 app.listen(3000, () => {
-  console.log("lisniting on http://localhost:3000");
+  // console.log("lisniting on http://localhost:3000");
 });
