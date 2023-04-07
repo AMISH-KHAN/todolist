@@ -30,7 +30,7 @@ var today = "today";
 console.log();
 app.get("/", (req, res) => {
   Item.find().then((result) => {
-    if (result.length === 0) {
+    if (result.length ===0 ) {
         Item.insertMany([newitem1, newitem2]);
         res.redirect("/")
     }
@@ -40,7 +40,18 @@ app.get("/", (req, res) => {
     }
   });
 });
-
+//post request
+app.post("/delete", (req, res) => {
+    var idvalue = req.body.checker;
+    if (idvalue) {
+        
+        Item.findByIdAndDelete(idvalue).then((result) => {
+            console.log(result)
+        })
+    }
+    
+    res.redirect("/")
+})
 app.post("/", (req, res) => {
   var item = req.body.item;
   console.log(req.body.item)
@@ -57,11 +68,13 @@ app.post("/", (req, res) => {
     res.redirect("/work");
   }
 });
+
+
 app.get("/work", (req, res) => {
   res.render("temp", { listtitle: "work list", addeditem: workitems });
 });
 app.post("/work", (req, res) => {
-  console.log(req.body);
+//   console.log(req.body);
   res.redirect("/work");
 });
 app.get("/about", (req, res) => {
