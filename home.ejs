@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+    
+
+<body>
+    <label for="new">create new todolist</label>
+    <input type="text" name="new" id="create">
+    <button type="submit">create</button>
+    <div id="goto"></div>
+  
+</body>
+<script>
+    const newName=document.getElementById("create");
+    const buttonprimary=document.getElementsByTagName('button')[0]
+    const goto=document.getElementById("goto")
+    buttonprimary.addEventListener("click",()=>{
+        const button=document.createElement("button");
+        button.innerText=newName.value;
+        button.innerHTML=newName.value;
+        goto.appendChild(button)
+        button.setAttribute("onClick",`location.href="/${newName.value}"`)
+    console.log("yeaah")
+    })
+</script>
+
+</html>

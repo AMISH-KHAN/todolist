@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const _=require("lodash")
 const app = express();
 const { daydis, dayname } = require(__dirname + "/day.js");
 // making database
@@ -54,7 +55,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:topic", (req, res) => {
-  const requestedTitle = req.params.topic;
+  const requestedTitle = _.capitalize(req.params.topic);
   List.findOne({ Name: requestedTitle }).then((result) => {
     
     if (!result) {
