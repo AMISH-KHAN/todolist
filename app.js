@@ -2,11 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const _=require("lodash")
+const _ = require("lodash")
+const dotenv = require("dotenv").config()
 const app = express();
-const { daydis, dayname } = require(__dirname + "/day.js");
+
 // making database
-mongoose.connect("mongodb://127.0.0.1/items");
+mongoose.connect(`mongodb+srv://Admin-amish:${process.env.KEY}@cluster0.px2n2sy.mongodb.net/items`);
 
 //making db schema
 const itemSchema = mongoose.Schema({
@@ -30,15 +31,12 @@ const newitem2 = new Item({
   Name: "press + to add items",
 });
 const defaulItems=[newitem1,newitem2]
-// if()
 
-// var items = [];
-let workitems = [];
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-var days = daydis();
+
 var today = "today";
 
 app.get("/", (req, res) => {
@@ -129,6 +127,11 @@ app.post("/", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("about");
 });
-app.listen(3000, () => {
+
+let port = process.env.PORT;
+if (port == null || port== "") {
+  port = 3000;
+}
+app.listen(port, () => {
   // console.log("lisniting on http://localhost:3000");
 });
