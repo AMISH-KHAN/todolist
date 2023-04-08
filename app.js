@@ -7,7 +7,7 @@ const dotenv = require("dotenv").config()
 const app = express();
 
 // making database
-mongoose.connect(`mongodb+srv://Admin-amish:${process.env.KEY}@cluster0.px2n2sy.mongodb.net/items`);
+mongoose.connect(`mongodb+srv://Admin-amish:Amishkhan2928@cluster0.px2n2sy.mongodb.net/items`);
 
 //making db schema
 const itemSchema = mongoose.Schema({
