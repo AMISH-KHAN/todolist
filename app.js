@@ -18,6 +18,7 @@ const itemSchema = mongoose.Schema({
 
 const listSchema = mongoose.Schema({
   Name: String,
+ 
   listItem:[itemSchema]
 })
 //definig new models
