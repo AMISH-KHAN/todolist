@@ -63,26 +63,30 @@ app.get("/today", (req, res) => {
 app.get("/login/:topic", (req, res) => {
   const requestedTitle = req.params.topic;
   List.findOne({ _id: requestedTitle }).then((result) => {
-    // console.log(result.Name)
+    console.log(result.listItem)
     res.render("temp", {
       listtitle:result.Name,
       addeditem: result.listItem,
       _id:requestedTitle
     })
   })
-  // res.render("temp")
+  
+  
 })
 app.post("/login/:topic", (req, res) => {
   const requestedTitle = req.params.topic;
   var item = req.body.item;
-  
-  console.log(item)
+  const items = new Item({
+    Name:item
+  })
   List.findOne({ _id: requestedTitle }).then((result) => {
     // console.log(result.Name)
     if (result.listItem.length>=0) {
+      items.save()
+      console.log(item)
       
-      result.listItem.push(newitem1)
-      result.listItem.push(item)
+      // result.listItem.push(newitem1)
+      result.listItem.push(items)
       result.save()
     }
     else {
