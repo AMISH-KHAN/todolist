@@ -71,7 +71,7 @@ app.get("/login/:topic", (req, res) => {
     })
   })
   
-  
+  res.redirect("/login/"+requestedTitle)
 })
 app.post("/login/:topic", (req, res) => {
   const requestedTitle = req.params.topic;
