@@ -1,4 +1,4 @@
-html {
+html,body {
   background-color: #E4E9FD;
   background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
   min-height: 1000px;
@@ -73,7 +73,7 @@ button:hover{
 
 }
 
-input[type="text"] {
+#item {
   text-align: center;
   height: 60px;
   top: 10px;
@@ -84,7 +84,7 @@ input[type="text"] {
   width: 313px;
 }
 
-input[type="text"]:focus {
+#item:focus {
   outline: none;
   box-shadow: inset 0 -3px 0 0 #A683E3;
 }
@@ -98,4 +98,15 @@ footer {
   color: white;
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
+}
+
+.register{
+  background-color: #a683e3;
+  padding: 2%;
+  color: white;
+  /* backdrop-filter: blur(118px); */
+  font-size: 1rem;
+}
+.btn{
+  width: 100%;
 }

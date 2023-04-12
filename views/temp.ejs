@@ -19,13 +19,13 @@
             </form>
             <%})%>
 
-        <form action="/" method="post" class="item">
+        <form action="/login/<%=_id%>" method="post" class="item">
             <input type="text" name="item" id="item" placeholder="add item" autocomplete="off">
             <button type="submit" name="submit" value=<%= listtitle %>>+</button>
         </form>
     
         </div>
+        <%- include("footer");-%>
     </body>
     
-    <%- include("footer");-%>
     </html>

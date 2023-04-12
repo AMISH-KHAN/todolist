@@ -18,7 +18,8 @@ const itemSchema = mongoose.Schema({
 
 const listSchema = mongoose.Schema({
   Name: String,
- 
+  email: String,
+  password:String,
   listItem:[itemSchema]
 })
 //definig new models
@@ -41,12 +42,17 @@ app.use(express.static("public"));
 
 
 var today = "today";
-
 app.get("/", (req, res) => {
+  res.render("register",{message:""})
+})
+app.get("/login", (req, res) => {
+  res.render("login",{message:""})
+})
+app.get("/today", (req, res) => {
   Item.find().then((result) => {
     if (result.length ===0 ) {
         Item.insertMany(defaulItems);
-        res.redirect("/")
+        res.redirect("/today")
     }
     else {
         
@@ -54,26 +60,38 @@ app.get("/", (req, res) => {
     }
   });
 });
-
-app.get("/:topic", (req, res) => {
-  const requestedTitle = _.capitalize(req.params.topic);
-  List.findOne({ Name: requestedTitle }).then((result) => {
-    
-    if (!result) {
+app.get("/login/:topic", (req, res) => {
+  const requestedTitle = req.params.topic;
+  List.findOne({ _id: requestedTitle }).then((result) => {
+    // console.log(result.Name)
+    res.render("temp", {
+      listtitle:result.Name,
+      addeditem: result.listItem,
+      _id:requestedTitle
+    })
+  })
+  // res.render("temp")
+})
+app.post("/login/:topic", (req, res) => {
+  const requestedTitle = req.params.topic;
+  var item = req.body.item;
+  
+  console.log(item)
+  List.findOne({ _id: requestedTitle }).then((result) => {
+    // console.log(result.Name)
+    if (result.listItem.length>=0) {
       
-      const listitems = new List({
-        Name: requestedTitle,
-        listItem: defaulItems
-      })
-      listitems.save();
-      res.redirect("/"+requestedTitle)
+      result.listItem.push(newitem1)
+      result.listItem.push(item)
+      result.save()
     }
     else {
-     res.render("temp",{ listtitle: result.Name, addeditem:result.listItem })
+      console.log("eewww")
       
     }
-    })
-    
+  })
+  
+  res.redirect("/login/"+requestedTitle)
     
    
 })
@@ -101,8 +119,59 @@ app.post("/delete", (req, res) => {
   }
     
 })
-
+// post request for registration
 app.post("/", (req, res) => {
+  let Name=req.body.name;
+  let email=req.body.email;
+  let password = req.body.password;
+  const entry = new List({
+      Name: Name,
+      email: email,
+    password: password,
+      listItem:defaulItems
+      
+  })
+
+  List.findOne({ email: email }).then((result) => {
+      // console.log(result)
+      if (!result) {
+          entry.save()
+          res.redirect("/login")
+      }
+      else {
+          // res.redirect("register")
+          res.render("register",{message:"user exits"})
+      }
+  })
+  
+})
+// post request for login
+app.post("/login", (req, res) => {
+  const loginemail = req.body.email;
+  const loginPassword = req.body.password;
+  // console.log(loginemail)
+  List.findOne({ email: loginemail }).then((result) => {
+      if (result.password == loginPassword) {
+          // console.log("user found " + result.Name)
+        // console.log(result)
+        // res.render("temp", {
+        //   _id: result._id,
+        //   addeditem:res.listItem,
+        // listtitle:result.Name
+        // })
+          res.redirect("/login/"+result._id)
+      }
+      else {
+          console.log("wrong password")
+          res.render("login",{message:"wrong password"})
+      }
+  }).catch((err) => {
+      console.log("user not exist")
+      res.render("login",{message:"user not exist"})
+  })
+})
+
+app.post("/today", (req, res) => {
   var item = req.body.item;
   const submit = req.body.submit;
   var newitem = new Item({
